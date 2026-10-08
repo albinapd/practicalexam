@@ -63,7 +63,24 @@ function App() {
     setAge(student.age);
   };
 
-
+  const updateStudent = () => {
+    axios
+      .put(`http://localhost:5000/students/${editingId}`, {
+        name: name,
+        course: course,
+        age: age,
+      })
+      .then(() => {
+        setEditingId(null);
+        setName("");
+        setCourse("");
+        setAge("");
+        fetchStudents();
+      })
+      .catch((error) => {
+        console.log("Error updating student:", error);
+      });
+  };
 
   return (
     <div>
