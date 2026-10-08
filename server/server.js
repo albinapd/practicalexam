@@ -29,6 +29,25 @@ app.get("/students", async (req, res) =>{
     res.json(students);
 });
 
+app.post("/students", async (req, res) =>{
+    try{
+        const {name, course, age} = req.body;
+
+        const newStudent = new Student({
+            name: name,
+            course: course,
+            age: age
+        })
+
+        const savedStudent = await newStudent.save();
+
+        res.status(201).json(savedStudent);
+    }catch (error){
+        console.log("Error adding student:", error);
+        res.status(500).json({message: "Failed to add student."})
+    }
+});
+
 app.listen(5000, () => {
     console.log("Server running on port 5000");
 });
