@@ -11,61 +11,56 @@ app.use(cors());
 app.use(express.json());
 
 mongoose
-    .connect(process.env.MONGO_URI)
-    .then(() => {
-        console.log("Connected to MongoDB");
-    })
-    .catch((error) =>{
-        console.log("MongoDB connection error:", error);
-    })
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((error) => {
+    console.log("MongoDB connection error:", error);
+  });
 
 app.get("/", (req, res) => {
-    res.send("Server is running!");
+  res.send("Server is running!");
 });
 
-app.get("/students", async (req, res) =>{
-    const students = await Student.find();
-
-    res.json(students);
+app.get("/students", async (req, res) => {
+  const students = await Student.find();
+  res.json(students);
 });
 
-app.post("/students", async (req, res) =>{
-    try{
-        const {name, course, age} = req.body;
+app.post("/students", async (req, res) => {
+  try {
+    const { name, course, age } = req.body;
 
-        const newStudent = new Student({
-            name: name,
-            course: course,
-            age: age
-        })
+    const newStudent = new Student({
+      name: name,
+      course: course,
+      age: age,
+    });
 
-        const savedStudent = await newStudent.save();
+    const savedStudent = await newStudent.save();
 
-        res.status(201).json(savedStudent);
-    }catch (error){
-        console.log("Error adding student:", error);
-        res.status(500).json({message: "Failed to add student."})
+    res.status(201).json(savedStudent);
+  } catch (error) {
+    console.log("Error adding student:", error);
+    res.status(500).json({ message: "Failed to add student." });
+  }
+});
+app.delete("/students/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const deletedStudent = await Student.findByIdAndDelete(id);
+    if (!deletedStudent) {
+      return res.status(404).json({ message: "Failed to delete student." });
     }
+    res.json({ message: "Student deleted successfully" });
+  } catch (error) {
+    console.log("Error deleting student:", error);
+    res.status(500).json({ message: "Failed to delete student." });
+  }
 });
 
-app.delete("/students/:id", async (req, res) =>{
-    try {
-        const id = req.params.id;
-        const deletedStudent = await Student.findByIdAndDelete(id);
-        if (!deletedStudent){
-            return res.status(404).json({ message: "Failed to delete student."})
-        }
-         res.json({ message: "Student deleted successfully"});
-     } catch (error) {
-        console.log("Error deleting student:", error);
-    res.status(500).json({message: "Failed to delete student."});
-    }
-});
 
 app.listen(5000, () => {
-    console.log("Server running on port 5000");
+  console.log("Server running on port 5000");
 });
-
-
-
-

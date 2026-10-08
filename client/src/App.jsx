@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+
 function App() {
+
   const [students, setStudents] = useState([]);
+
   const [name, setName] = useState("");
   const [course, setCourse] = useState("");
   const [age, setAge] = useState("");
+
   const [editingId, setEditingId] = useState(null);
+  
   const fetchStudents = () => {
     axios
       .get("http://localhost:5000/students")
@@ -19,63 +24,9 @@ function App() {
   useEffect(() => {
     fetchStudents();
   }, []);
-  const express = require("express");
-  const cors = require("cors");
-  const mongoose = require("mongoose");
-  const Student = require("./models/Student");
-  require("dotenv").config();
-  const app = express();
-  app.use(cors());
-  app.use(express.json());
-  mongoose
-    .connect(process.env.MONGO_URI)
-    .then(() => {
-      console.log("Connected to MongoDB");
-    })
-    .catch((error) => {
-      console.log("MongoDB connection error:", error);
-    });
-  app.get("/", (req, res) => {
-    res.send("Server is running!");
-  });
 
-  app.get("/students", async (req, res) => {
-    const students = await Student.find();
-    res.json(students);
-  });
-
-  app.post("/students", async (req, res) => {
-    try {
-      const { name, course, age } = req.body;
-      const newStudent = new Student({
-        name: name,
-        course: course,
-        age: age,
-      });
-      const savedStudent = await newStudent.save();
-      res.status(201).json(savedStudent);
-    } catch (error) {
-      console.log("Error adding student:", error);
-      res.status(500).json({ message: "Failed to add student" });
-    }
-  });
-
-   //DELETE
-   app.delete("/students/:id", async (req, res) => {
-    try {
-      const id = req.params.id;
-      const deletedStudent = await Student.findByIdAndDelete(id);
-      if (!deletedStudent) {
-        return res.status(404).json({ message: "Failed to delete student." });
-      }
-      res.json({ message: "Student deleted successfully" });
-    } catch (error) {
-      console.log("Error deleting student:", error);
-      res.status(500).json({ message: "Failed to delete student." });
-    }
-  });
-
-  const addStudent = () => {
+  const addStudent = (event) => {
+    event.preventDefault
     axios
       .post("http://localhost:5000/students", {
         name: name,
@@ -112,9 +63,12 @@ function App() {
     setAge(student.age);
   };
 
+
+
   return (
     <div>
       <h1>Student Management System</h1>
+      <h2>{editingId ? "Edit Student" : "Add Student"}</h2>
       <input
         type="text"
         placeholder="Name"
@@ -134,9 +88,13 @@ function App() {
         onChange={(event) => setAge(event.target.value)}
       />
 
-      <button onClick={addStudent}>Add Student</button>
-      <button onClick={deleteStudent}>Delete Student</button>
-
+      {editingId ? (
+        <>
+          <button type="button" onClick={updateStudent}>UpdateStudent</button>
+        </>
+      ) : (
+        <button type="button" onClick={addStudent}>Add Student</button>
+      )}
       <h2>Students</h2>
 
       {students.map((student) => (
@@ -144,9 +102,8 @@ function App() {
           <p>Name: {student.name}</p>
           <p>Course: {student.course}</p>
           <p>Age: {student.age}</p>
-
-          <button>Edit</button>
-          <button>Delete</button>
+          <button onClick={() => startEdit(student)}>Edit</button>
+          <button onClick={() => deleteStudent(student._id)}>Delete</button>
         </div>
       ))}
     </div>
