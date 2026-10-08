@@ -12,7 +12,7 @@ function App() {
 
   const fetchStudents = () => {
     axios
-      .get("https://practicalexam-yvhm.vercel.app/students")
+      .get("https://practicalexam-ten.vercel.app/students")
       .then((response) => {
         setStudents(response.data);
       })
@@ -27,7 +27,7 @@ function App() {
   const addStudent = (event) => {
     event.preventDefault;
     axios
-      .post("https://practicalexam-yvhm.vercel.app/students", {
+      .post("https://practicalexam-ten.vercel.app/students", {
         name: name,
         course: course,
         age: age,
@@ -46,7 +46,7 @@ function App() {
 
   const deleteStudent = (id) => {
     axios
-      .delete(`https://practicalexam-yvhm.vercel.app/${id}`)
+      .delete(`https://practicalexam-ten.vercel.app/students/${id}`)
       .then(() => {
         fetchStudents();
       })
@@ -64,7 +64,7 @@ function App() {
 
   const updateStudent = () => {
     axios
-      .put(`https://practicalexam-yvhm.vercel.app/${editingId}`, {
+      .put(`https://practicalexam-ten.vercel.app/students/${editingId}`, {
         name: name,
         course: course,
         age: age,
