@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 function App() {
-
   const [students, setStudents] = useState([]);
 
   const [name, setName] = useState("");
@@ -10,10 +9,10 @@ function App() {
   const [age, setAge] = useState("");
 
   const [editingId, setEditingId] = useState(null);
-  
+
   const fetchStudents = () => {
     axios
-      .get("http://localhost:5000/students")
+      .get("https://practicalexam-yvhm.vercel.app/students")
       .then((response) => {
         setStudents(response.data);
       })
@@ -26,9 +25,9 @@ function App() {
   }, []);
 
   const addStudent = (event) => {
-    event.preventDefault
+    event.preventDefault;
     axios
-      .post("http://localhost:5000/students", {
+      .post("https://practicalexam-yvhm.vercel.app/students", {
         name: name,
         course: course,
         age: age,
@@ -47,7 +46,7 @@ function App() {
 
   const deleteStudent = (id) => {
     axios
-      .delete(`http://localhost:5000/students/${id}`)
+      .delete(`https://practicalexam-yvhm.vercel.app/${id}`)
       .then(() => {
         fetchStudents();
       })
@@ -65,7 +64,7 @@ function App() {
 
   const updateStudent = () => {
     axios
-      .put(`http://localhost:5000/students/${editingId}`, {
+      .put(`https://practicalexam-yvhm.vercel.app/${editingId}`, {
         name: name,
         course: course,
         age: age,
@@ -107,10 +106,14 @@ function App() {
 
       {editingId ? (
         <>
-          <button type="button" onClick={updateStudent}>UpdateStudent</button>
+          <button type="button" onClick={updateStudent}>
+            UpdateStudent
+          </button>
         </>
       ) : (
-        <button type="button" onClick={addStudent}>Add Student</button>
+        <button type="button" onClick={addStudent}>
+          Add Student
+        </button>
       )}
       <h2>Students</h2>
 
